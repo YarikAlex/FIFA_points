@@ -1,7 +1,7 @@
 #include "Team.h"
 
 Team::Team(std::string name, int fifa_rang, double fifa_points) :
-	m_name(name), m_fifa_rang(fifa_rang), m_fifa_points(fifa_points)
+	m_name(name), m_fifa_rang(fifa_rang), m_fifa_points(fifa_points), m_fifa_before(fifa_points)
 {
 	m_place = 0;
 	m_games = 0;
@@ -35,6 +35,6 @@ void Team::CountingStats(int scored, int conceded, double ImportanceOfMatch, con
 
 std::ostream& operator<< (std::ostream& out, const Team& team)
 {
-	out << team.m_name << "\t" << team.m_games << "\t" << team.m_points << std::endl;
+	out << team.m_name << "\t" << team.m_games << "\t" << team.m_points <<"\t"<<team.m_fifa_points << std::endl;
 	return out;
 }
