@@ -1,0 +1,5 @@
+Brasil 1 1500
+Iran 2 1499
+Russia 3 1498
+Japan 4 1497
+Mexica 5 1496

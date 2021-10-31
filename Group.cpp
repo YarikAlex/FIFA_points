@@ -15,3 +15,12 @@ void Group::PlayMatch(Team& first, Team& second)
 	if (home < guest)
 		std::cout << second.m_name << " - win!" << std::endl;
 }
+
+std::ostream& operator<< (std::ostream& out, const Group& group)
+{
+	for (auto it : group.m_teams)
+	{
+		out << it << std::endl;
+	}
+	return out;
+}
