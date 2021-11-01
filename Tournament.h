@@ -18,6 +18,7 @@ public:
 	int ChooseTournament();
 	void AddParticipants(std::string path, int numberParticipants);
 	void SetGroup(std::string path, const int tournamentGroups);
+	void GroupRound();
 	void PrintParticipants();
 	void PrintGroup();
 };

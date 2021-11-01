@@ -18,6 +18,7 @@ void Team::CountingStats(int scored, int conceded, double ImportanceOfMatch, con
 	m_goal_conceded += conceded;
 	m_goal_difference = m_goal_scored - m_goal_conceded;
 	m_games++;
+	m_fifa_before = m_fifa_points;
 	double difference = this->m_fifa_points - another_team_points;
 	double ExpectedResultOfTheMatch = 1 / (pow(10, -difference / 600) + 1);
 	//New_fifa_points = Fifa_points + ImportanceOfMatches * (ResultOfMatch - ExpectedResultOfTheMatch)
@@ -35,6 +36,9 @@ void Team::CountingStats(int scored, int conceded, double ImportanceOfMatch, con
 
 std::ostream& operator<< (std::ostream& out, const Team& team)
 {
-	out << team.m_name << "\t" << team.m_games << "\t" << team.m_points <<"\t"<<team.m_fifa_points << std::endl;
+	
+	out << std::setw(5) << team.m_place<<"\t" <<std::setw(10) << team.m_name << "\t" << team.m_games << "\t" << team.m_points 
+		<< "\t" << team.m_goal_scored << "\t" << team.m_goal_conceded <<"\t" << std::setw(10) << team.m_fifa_points<< "\t"<< std::setprecision(4) << team.m_fifa_points - team.m_fifa_before
+		<<  std::endl;
 	return out;
 }

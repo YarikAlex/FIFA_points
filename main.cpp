@@ -12,6 +12,7 @@ int main()
 	Tournament tournament;
 	tournament.PrintParticipants();
 	tournament.PrintGroup();
+	tournament.GroupRound();
 
 	return 0;
 }

@@ -9,12 +9,10 @@
 		switch (ChooseTournament())
 		{
 		case 1:
-			std::cout << "Add Euro!" << std::endl;
 			AddParticipants(EuroPath, m_euroParticipants);
 			SetGroup(EuroGroupPath, m_numberEuroGroup);
 			break;
 		case 2:
-			std::cout << "Add World Cup!" << std::endl;
 			AddParticipants(WorldCupPath, m_worldCupParticipants);
 			SetGroup(WorldCupGroupPath, m_numberWorldCupGroup);
 			break;
@@ -80,10 +78,48 @@
 			}
 		}
 	}
+	void Tournament::GroupRound()
+	{
+		int numberRounds = 3;
+		for (int i = 0; i < numberRounds; ++i)
+		{
+			for (auto it : m_groups)
+			{
+				int rank = 0;
+				if (i == 0)
+				{
+					std::cout << "----Round #1" << std::endl;
+					it.PlayMatch(it.m_teams[0], it.m_teams[1]);
+					it.PlayMatch(it.m_teams[2], it.m_teams[3]);
+					it.SortGroup();
+					for_each(it.m_teams.begin(), it.m_teams.end(), [&](Team& team) {team.m_place = ++rank; });
+					std::cout << it;
+				}
+				if (i == 1)
+				{
+					std::cout << "----Round #2" << std::endl;
+					it.PlayMatch(it.m_teams[0], it.m_teams[2]);
+					it.PlayMatch(it.m_teams[1], it.m_teams[3]);
+					it.SortGroup();
+					for_each(it.m_teams.begin(), it.m_teams.end(), [&](Team& team) {team.m_place = ++rank; });
+					std::cout << it;
+				}
+				if (i == 2)
+				{
+					std::cout << "----Round #3" << std::endl;
+					it.PlayMatch(it.m_teams[0], it.m_teams[3]);
+					it.PlayMatch(it.m_teams[1], it.m_teams[2]);
+					it.SortGroup();
+					for_each(it.m_teams.begin(), it.m_teams.end(), [&](Team& team) {team.m_place = ++rank; });
+					std::cout << it;
+				}
+			}
+		}
+	}
 	void Tournament::PrintParticipants()
 	{
 		for (auto it : m_participants)
-			std::cout << it.m_name << "\t" << it.m_fifa_rang << "\t" << it.m_fifa_points << std::endl;
+			std::cout <<std::setw(10)<< it.m_name << "\t" << it.m_fifa_rang << "\t" << it.m_fifa_points << std::endl;
 	}
 
 	void Tournament::PrintGroup()
