@@ -3,17 +3,18 @@
 #include <vector>
 #include <tuple>
 #include <algorithm>
+#include <memory>
 #include "Team.h"
 
 class Group
 {
 public:
-	std::vector<Team> m_teams;
+	std::vector<std::shared_ptr<Team>> m_teams;
 	const double ImportanceOfMatch = 35.0; //FIFA sets different coefficients for different stages of the tournament. For a group round it's 35.
 	const int numberTeams = 4; //the number of teams in the group.
 	Group() = default;
 	~Group() = default;
-	void PlayMatch(Team& first, Team& second);
+	void PlayMatch(std::shared_ptr<Team>& first, std::shared_ptr<Team>& second);
 	void SortGroup();
-	friend std::ostream& operator<< (std::ostream& out, const Group& group);
+	friend std::ostream& operator<< (std::ostream& out, const std::shared_ptr<Group>& group);
 };

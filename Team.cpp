@@ -10,7 +10,6 @@ Team::Team(std::string name, int fifa_rang, double fifa_points) :
 	m_goal_conceded = 0;
 	m_goal_difference = 0;
 }
-Team::~Team() {}
 
 void Team::CountingStats(int scored, int conceded, double ImportanceOfMatch, const double another_team_points)
 {
@@ -34,11 +33,11 @@ void Team::CountingStats(int scored, int conceded, double ImportanceOfMatch, con
 		m_fifa_points = m_fifa_points + ImportanceOfMatch * (0 - ExpectedResultOfTheMatch);
 }
 
-std::ostream& operator<< (std::ostream& out, const Team& team)
+std::ostream& operator<< (std::ostream& out, const std::shared_ptr<Team>& team)
 {
 	
-	out << std::setw(5) << team.m_place<<"\t" <<std::setw(10) << team.m_name << "\t" << team.m_games << "\t" << team.m_points 
-		<< "\t" << team.m_goal_scored << "\t" << team.m_goal_conceded <<"\t" << std::setw(10) << team.m_fifa_points<< "\t"<< std::setprecision(4) << team.m_fifa_points - team.m_fifa_before
+	out << std::setw(5) << team->m_place<<"\t" <<std::setw(10) << team->m_name << "\t" << team->m_games << "\t" << team->m_points
+		<< "\t" << team->m_goal_scored << "\t" << team->m_goal_conceded <<"\t" << std::setw(10) << team->m_fifa_points<< "\t"<< std::setprecision(4) << team->m_fifa_points - team->m_fifa_before
 		<<  std::endl;
 	return out;
 }

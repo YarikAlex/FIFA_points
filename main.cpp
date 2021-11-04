@@ -13,6 +13,7 @@ int main()
 	tournament.PrintParticipants();
 	tournament.PrintGroup();
 	tournament.GroupRound();
+	tournament.SetEuroPlayOff();
 
 	return 0;
 }
