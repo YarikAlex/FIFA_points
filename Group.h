@@ -14,7 +14,7 @@ public:
   static constexpr int numberTeams = 4; //the number of teams in the group.
   Group() = default;
   ~Group() = default;
-  void PlayMatch(std::shared_ptr<Team>& first, std::shared_ptr<Team>& second);
-  void SortGroup();
+  void playMatch(std::shared_ptr<Team>& first, std::shared_ptr<Team>& second);
+  void sortGroup();
   friend std::ostream& operator<< (std::ostream& out, const std::shared_ptr<Group>& group);
 };
