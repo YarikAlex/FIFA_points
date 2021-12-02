@@ -36,7 +36,8 @@ void Group::sortGroup()
 {
   sort(teams.begin(), teams.end(), [](std::shared_ptr<Team>& lhs, std::shared_ptr<Team>& rhs)
   {
-	return std::tie(lhs->points, lhs->goalsDifference) > std::tie(rhs->points, rhs->goalsDifference);
+	return std::tie(lhs->points, lhs->goalsDifference, lhs->goalsScored, lhs->goalsConceded) 
+		 > std::tie(rhs->points, rhs->goalsDifference, rhs->goalsScored, rhs->goalsConceded);
   });
 }
 
