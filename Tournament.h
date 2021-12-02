@@ -24,6 +24,8 @@ public:
   ~Tournament() = default;
   void playGroupRound();
   void setEuroPlayOff();
+  void setWorldCupPlayOff();
   void printParticipants();
   void printGroup();
+  void printPlayOffGrid();
 };

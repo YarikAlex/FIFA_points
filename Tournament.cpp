@@ -227,16 +227,32 @@ void Tournament::setEuroPlayOff()
 	  std::cout << "Error! " << ex.what() << std::endl;
 	}
   }
-  int count = 0;
-  for (auto it : m_leftSide)
+}
+void Tournament::setWorldCupPlayOff()
+{
+  std::queue<std::shared_ptr<Team>> firstTeams; //A1, B1, C1, D1, E1, F1, G1, H1
+  std::queue<std::shared_ptr<Team>> secondTeams; //A2, B2, C2, D2, E2, F2, G2, H2
+  //We split the first and second places into two baskets.
+  for (auto it : m_groups)
   {
-	std::cout << "Match #" << ++count << std::endl;
-	std::cout << it.first_team << std::endl << it.second_team << std::endl << std::endl;
+	for_each(it->teams.begin(), it->teams.end(), [&](std::shared_ptr<Team> &team)
+	{
+	  if(team->place == 1)
+		firstTeams.push(team);
+	  if(team->place == 2)
+		secondTeams.push(team);
+	});
   }
-  for (auto it : m_rightSide)
+  //Create a playoff grid
+  for(int i=0; i<4; ++i)
   {
-	std::cout << "Match #" << ++count << std::endl;
-	std::cout << it.first_team << std::endl << it.second_team << std::endl << std::endl;
+	std::shared_ptr<Team> tmpTeam = secondTeams.front();
+	secondTeams.pop();
+	m_leftSide.push_back(createMatch(firstTeams.front(), secondTeams.front()));
+	firstTeams.pop();
+	secondTeams.pop();
+	m_rightSide.push_back(createMatch(firstTeams.front(), tmpTeam));
+	firstTeams.pop();
   }
 }
 void Tournament::printParticipants()
@@ -254,6 +270,21 @@ void Tournament::printGroup()
 {
   for (auto it : m_groups)
 	std::cout << it << std::endl;
+}
+
+void Tournament::printPlayOffGrid()
+{
+  int count = 0;
+  for (auto it : m_leftSide)
+  {
+	std::cout << "Match #" << ++count << std::endl;
+	std::cout << it.first_team << std::endl << it.second_team << std::endl << std::endl;
+  }
+  for (auto it : m_rightSide)
+  {
+	std::cout << "Match #" << ++count << std::endl;
+	std::cout << it.first_team << std::endl << it.second_team << std::endl << std::endl;
+  }
 }
 
 Match Tournament::createMatch(std::shared_ptr<Team> lhs, std::shared_ptr<Team> rhs) const

@@ -38,7 +38,17 @@ int main()
   tournament.printParticipants();
   tournament.printGroup();
   tournament.playGroupRound();
-  tournament.setEuroPlayOff();
+  if (choice == EURO)
+  {
+	tournament.setEuroPlayOff();
+	tournament.printPlayOffGrid();
+  }
+  if (choice == WORLD)
+  {
+	tournament.setWorldCupPlayOff();
+	tournament.printPlayOffGrid();
+  }
+	
 
   return 0;
 }
