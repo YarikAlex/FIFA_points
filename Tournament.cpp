@@ -52,7 +52,6 @@ void Tournament::addParticipants(std::string& path, int numberParticipants) //Th
 	  m_participants.push_back(newTeam);
 	}
   }
-  participantsList.close();
 }
 void Tournament::setGroup(std::string& path, const int tournamentGroups) //The function distributes the participants into groups.
 {
@@ -75,7 +74,6 @@ void Tournament::setGroup(std::string& path, const int tournamentGroups) //The f
 	  m_groups.push_back(newGroup);
 	}
   }
-  groupList.close();
 }
 std::shared_ptr<Team> Tournament::addTeam(std::string& name)
 {

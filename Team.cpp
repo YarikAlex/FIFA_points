@@ -12,7 +12,7 @@ Team::Team(std::string nameNew, int fifaRangNew, double fifaPointsNew) :
   startingFifaPoints = fifaPoints;
 }
 
-const std::tuple<int, int, int, double> Team::evaluatingStats(int scored, int conceded, double importanceOfMatch, const double anotherTeamPoints)
+const std::tuple<int, int, int, double> Team::evaluateStats(int scored, int conceded, double importanceOfMatch, const double anotherTeamPoints)
 {
   games++;
   fifaBefore = fifaPoints;

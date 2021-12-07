@@ -10,14 +10,14 @@ void Group::playMatch(std::shared_ptr<Team>& first, std::shared_ptr<Team>& secon
   std::cout << "\t-------------------------------------------------------" << std::endl;
 
   //Calculate the statistics for the first team.
-  std::tuple<int, int, int, double> firstTeamStats = first->evaluatingStats(home, guest, importanceOfMatch, second->fifaPoints);
+  std::tuple<int, int, int, double> firstTeamStats = first->evaluateStats(home, guest, importanceOfMatch, second->fifaPoints);
   first->goalsScored = std::get<0>(firstTeamStats);
   first->goalsConceded = std::get<1>(firstTeamStats);
   first->goalsDifference = std::get<2>(firstTeamStats);
   first->fifaPoints = std::get<3>(firstTeamStats);
 
   //Calculate the statistics for the second team.
-  std::tuple<int, int, int, double> secondTeamStats = second->evaluatingStats(guest, home, importanceOfMatch, first->fifaBefore);
+  std::tuple<int, int, int, double> secondTeamStats = second->evaluateStats(guest, home, importanceOfMatch, first->fifaBefore);
   second->goalsScored = std::get<0>(secondTeamStats);
   second->goalsConceded = std::get<1>(secondTeamStats);
   second->goalsDifference = std::get<2>(secondTeamStats);

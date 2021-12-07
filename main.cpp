@@ -13,8 +13,7 @@ int main()
   const string euroGroupPath = "../FIFApoints/EuroCupGroups.txt";
   const string worldCupPath = "../FIFApoints/WorldCupParticipants.txt";
   const string worldCupGroupPath = "../FIFApoints/WorldCupGroups.txt";
-  const int EURO = 1;
-  const int WORLD = 2;
+  enum tournaments {EURO = 1, WORLD };
 
   int choice;
   do {
