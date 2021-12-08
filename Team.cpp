@@ -1,6 +1,6 @@
 #include "Team.h"
 
-Team::Team(std::string nameNew, int fifaRangNew, double fifaPointsNew) :
+Team::Team(std::string_view nameNew, int fifaRangNew, double fifaPointsNew) :
   name(nameNew), fifaRank(fifaRangNew), fifaPoints(fifaPointsNew), fifaBefore(fifaPointsNew)
 {
   place = 0;
@@ -39,7 +39,6 @@ const std::tuple<int, int, int, double> Team::evaluateStats(int scored, int conc
 
 std::ostream& operator<< (std::ostream& out, const std::shared_ptr<Team>& team)
 {
-	
   out << std::setw(5) << team->place<<"\t" <<std::setw(10) << team->name << "\t" << team->games << "\t" << team->points
 	  << "\t" << team->goalsScored << "\t" << team->goalsConceded <<"\t" << std::setw(10) << team->fifaPoints<< "\t"<< std::setprecision(4) << team->fifaPoints - team->fifaBefore
 	  <<  std::endl;

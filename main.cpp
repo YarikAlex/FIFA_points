@@ -40,12 +40,15 @@ int main()
   if (choice == EURO)
   {
 	tournament.setEuroPlayOff();
-	tournament.printPlayOffGrid();
+	//TeamNamePrint winner(tournament.playRoundPlayOff());
+	cout<<"------" << tournament.playRoundPlayOff()->name << " is the Champion of Europe!!!------" << endl;
+	tournament.printParticipants();
   }
   if (choice == WORLD)
   {
 	tournament.setWorldCupPlayOff();
-	tournament.printPlayOffGrid();
+	cout << "------" << tournament.playRoundPlayOff()->name << " is the World Champion!!!------" << endl;
+	tournament.printParticipants();
   }
 	
 
