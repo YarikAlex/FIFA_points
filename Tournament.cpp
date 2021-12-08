@@ -34,7 +34,7 @@ Tournament::Tournament(int choice, std::string& path, std::string& pathGroup)
   }
 }
 
-void Tournament::addParticipants(std::string& path, int numberParticipants) //The function reads participants from a file.
+void Tournament::addParticipants(const std::string& path, int numberParticipants) //The function reads participants from a file.
 {
   std::ifstream participantsList;
   participantsList.open(path);
@@ -53,7 +53,7 @@ void Tournament::addParticipants(std::string& path, int numberParticipants) //Th
 	}
   }
 }
-void Tournament::setGroup(std::string& path, const int tournamentGroups) //The function distributes the participants into groups.
+void Tournament::setGroup(const std::string& path, const int tournamentGroups) //The function distributes the participants into groups.
 {
   std::ifstream groupList;
   groupList.open(path);
@@ -264,25 +264,64 @@ void Tournament::printParticipants()
 	<< itTeam->fifaPoints - itTeam->startingFifaPoints << std::endl;
 }
 
-void Tournament::printGroup()
-{
-  for (auto it : m_groups)
-	std::cout << it << std::endl;
-}
-
 void Tournament::printPlayOffGrid()
 {
   int count = 0;
   for (auto it : m_leftSide)
   {
 	std::cout << "Match #" << ++count << std::endl;
-	std::cout << it.first_team << std::endl << it.second_team << std::endl << std::endl;
+	std::cout << it.firstTeam << std::endl << it.secondTeam << std::endl << std::endl;
   }
   for (auto it : m_rightSide)
   {
 	std::cout << "Match #" << ++count << std::endl;
-	std::cout << it.first_team << std::endl << it.second_team << std::endl << std::endl;
+	std::cout << it.firstTeam << std::endl << it.secondTeam << std::endl << std::endl;
   }
+}
+
+std::shared_ptr<Team> Tournament::playRoundPlayOff()
+{ 
+  for(int i = 0; i<2; ++i)
+  {
+	printPlayOffGrid();
+	playRoundPlayOffSide(m_leftSide, i);
+	playRoundPlayOffSide(m_rightSide, i);
+  }
+  std::cout<<std::endl;
+  std::cout<<"\t----Semi-finals----"<<std::endl;
+  printPlayOffGrid();
+  std::shared_ptr<Team> firstFinalist, secondFinalist, winner;
+  firstFinalist = m_leftSide.front().playMatchPlayOff(m_leftSide.front().firstTeam, m_leftSide.front().secondTeam);
+  secondFinalist = m_rightSide.front().playMatchPlayOff(m_rightSide.front().firstTeam, m_rightSide.front().secondTeam);
+  std::cout << std::endl;
+  std::cout << "\t----Final----" << std::endl;
+  Match finalMatch = createMatch(firstFinalist, secondFinalist);
+
+  return winner = finalMatch.playMatchPlayOff(finalMatch.firstTeam, finalMatch.secondTeam);
+}
+
+void Tournament::playRoundPlayOffSide(std::vector<Match>& gridSide, int round)
+{
+  std::queue<std::shared_ptr<Team>> winners;
+  for (auto it : gridSide)
+  {
+	winners.push(it.playMatchPlayOff(it.firstTeam, it.secondTeam));
+  }
+  gridSide.clear();
+  gridSide.shrink_to_fit();
+  for (int i = round; i < 2; ++i)
+  {
+	std::shared_ptr<Team> tmpTeam = winners.front();
+	winners.pop();
+	gridSide.push_back(createMatch(tmpTeam, winners.front()));
+	winners.pop();
+  }
+}
+
+void Tournament::printGroup()
+{
+  for (auto it : m_groups)
+	std::cout << it << std::endl;
 }
 
 Match Tournament::createMatch(std::shared_ptr<Team> lhs, std::shared_ptr<Team> rhs) const
