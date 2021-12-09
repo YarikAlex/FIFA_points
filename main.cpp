@@ -17,7 +17,7 @@ int main()
 
   int choice;
   do {
-	std::cout << "---Select a tournament---" << std::endl;
+	std::cout << "--------Select a tournament--------" << std::endl;
 	std::cout << "Press 1 for Euro or 2 for World Cup!" << std::endl;
 	std::cin >> choice;
   } while (choice < 1 or choice > 2);
