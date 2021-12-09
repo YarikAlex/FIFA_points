@@ -18,3 +18,4 @@ public:
 };
 
 std::ostream& operator<< (std::ostream& out, const std::shared_ptr<Group>& group);
+

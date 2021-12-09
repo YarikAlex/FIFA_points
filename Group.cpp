@@ -10,18 +10,18 @@ void Group::playMatch(std::shared_ptr<Team>& first, std::shared_ptr<Team>& secon
   std::cout << "\t-------------------------------------------------------" << std::endl;
 
   //Calculate the statistics for the first team.
-  std::tuple<int, int, int, double> firstTeamStats = first->evaluateStats(home, guest, importanceOfMatch, second->fifaPoints);
-  first->goalsScored = std::get<0>(firstTeamStats);
-  first->goalsConceded = std::get<1>(firstTeamStats);
-  first->goalsDifference = std::get<2>(firstTeamStats);
-  first->fifaPoints = std::get<3>(firstTeamStats);
+  teamStats firstTeamStats = first->evaluateStats(home, guest, importanceOfMatch, second->fifaPoints);
+  first->goalsScored = firstTeamStats.scored;
+  first->goalsConceded = firstTeamStats.conceded;
+  first->goalsDifference =firstTeamStats.difference;
+  first->fifaPoints = firstTeamStats.pointsFifa;
 
   //Calculate the statistics for the second team.
-  std::tuple<int, int, int, double> secondTeamStats = second->evaluateStats(guest, home, importanceOfMatch, first->fifaBefore);
-  second->goalsScored = std::get<0>(secondTeamStats);
-  second->goalsConceded = std::get<1>(secondTeamStats);
-  second->goalsDifference = std::get<2>(secondTeamStats);
-  second->fifaPoints = std::get<3>(secondTeamStats);
+  teamStats secondTeamStats = second->evaluateStats(guest, home, importanceOfMatch, first->fifaBefore);
+  second->goalsScored = secondTeamStats.scored;
+  second->goalsConceded = secondTeamStats.conceded;
+  second->goalsDifference = secondTeamStats.difference;
+  second->fifaPoints = secondTeamStats.pointsFifa;
 
   //Output of the result to the screen
   if (home > guest)
