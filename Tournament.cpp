@@ -39,7 +39,7 @@ void Tournament::addParticipants(const std::string& path, int numberParticipants
   std::ifstream participantsList;
   participantsList.open(path);
   if (!participantsList.is_open() and !participantsList.good())
-	throw std::exception("Unable to add participants. File not found");
+	throw std::exception("Unable to add participants. File not found or damaged!");
   else
   {
 	std::string name;
@@ -58,7 +58,7 @@ void Tournament::setGroup(const std::string& path, const int tournamentGroups) /
   std::ifstream groupList;
   groupList.open(path);
   if(!groupList.is_open() and !groupList.good())
-	throw std::exception("Unable to set groups. File not found!");
+	throw std::exception("Unable to set groups. File not found or damaged!");
   else
   {
 	for (int numberGroups = 0; numberGroups < tournamentGroups; ++numberGroups)
@@ -116,6 +116,7 @@ void Tournament::playGroupRound()
 	  }
 	}
   }
+  std::cout<<std::endl;
 }
 void Tournament::setEuroPlayOff()
 {
@@ -144,21 +145,14 @@ void Tournament::setEuroPlayOff()
   //Remove fifth and sixth teams
   for (int i = 0; i < 2; ++i)
   {
-	try
+	if(preparationThirdTeams.empty())
+	  std::cerr << "Vector preparationThirdTeams is empty" << std::endl;
+	else
 	{
-	  if(preparationThirdTeams.empty())
-		throw std::exception("Vector preparationThirdTeams is empty");
-	  else
-	  {
-		preparationThirdTeams.pop_back();
-		preparationThirdTeams.shrink_to_fit();
-	  }
+	  preparationThirdTeams.pop_back();
+	  preparationThirdTeams.shrink_to_fit();
 	}
-	catch (const std::exception& ex)
-	{
-	  std::cout << "Error! " << ex.what() << std::endl;
-	}
-	
+
   }
   //put commands in the queue
   for (auto it : preparationThirdTeams)
@@ -169,61 +163,55 @@ void Tournament::setEuroPlayOff()
   //Create a playoff grid
   for (int i = 0; i < 2; ++i)
   {
-	try
+	if (firstTeams.empty())
+	  std::cerr <<"Queue firstTeams is empty" << std::endl;
+	if (secondTeams.empty())
+	  std::cerr << "Queue secondTeams is empty" << std::endl;
+	if (thirdTeams.empty())
+	  std::cerr << "Queue thirdTeamss is empty" << std::endl;
+	else
 	{
-	  if (firstTeams.empty())
-		throw std::exception("Queue firstTeams is empty");
-	  if (secondTeams.empty())
-		throw std::exception("Queue secondTeams is empty");
-	  if (thirdTeams.empty())
-		throw std::exception("Queue thirdTeamss is empty");
-	  else
-	  {
-		//A2-B2 and D2-F2
-		std::shared_ptr<Team> firstTmpTeam = secondTeams.front();
-		secondTeams.pop();
-		std::shared_ptr<Team> secondTmpTeam = secondTeams.front();
-		secondTeams.pop();
-		if (i == 0)
-		  m_leftSide.push_back(createMatch(firstTmpTeam, secondTmpTeam));
-		if (i == 1)
-		  m_rightSide.push_back(createMatch(firstTmpTeam, secondTmpTeam));
+	  //A2-B2 and D2-F2
+	  std::shared_ptr<Team> firstTmpTeam = secondTeams.front();
+	  secondTeams.pop();
+	  std::shared_ptr<Team> secondTmpTeam = secondTeams.front();
+	  secondTeams.pop();
+	  if (i == 0)
+		m_leftSide.push_back(createMatch(firstTmpTeam, secondTmpTeam));
+	  if (i == 1)
+		m_rightSide.push_back(createMatch(firstTmpTeam, secondTmpTeam));
 
-		//A1-C2 and D1-F2
-		firstTmpTeam = firstTeams.front();
-		firstTeams.pop();
-		secondTmpTeam = secondTeams.front();
-		secondTeams.pop();
-		if (i == 0)
-		  m_rightSide.push_back(createMatch(firstTmpTeam, secondTmpTeam));
-		if (i == 1)
-		  m_leftSide.push_back(createMatch(firstTmpTeam, secondTmpTeam));
+	  //A1-C2 and D1-F2
+	  firstTmpTeam = firstTeams.front();
+	  firstTeams.pop();
+	  secondTmpTeam = secondTeams.front();
+	  secondTeams.pop();
+	  if (i == 0)
+		m_rightSide.push_back(createMatch(firstTmpTeam, secondTmpTeam));
+	  if (i == 1)
+		m_leftSide.push_back(createMatch(firstTmpTeam, secondTmpTeam));
 
-		//B1-third-2 and E1-third-4
-		std::shared_ptr<Team> thirdTmpTeam = thirdTeams.front(); //get third-1 and third-4 from the queue
-		thirdTeams.pop();
-		firstTmpTeam = firstTeams.front();
-		firstTeams.pop();
-		secondTmpTeam = thirdTeams.front();
-		thirdTeams.pop();
-		if (i == 0)
-		  m_rightSide.push_back(createMatch(firstTmpTeam, secondTmpTeam));
-		if (i == 1)
-		  m_leftSide.push_back(createMatch(firstTmpTeam, secondTmpTeam));
+	  //B1-third-2 and E1-third-4
+	  std::shared_ptr<Team> thirdTmpTeam = thirdTeams.front(); //get third-1 and third-4 from the queue
+	  thirdTeams.pop();
+	  firstTmpTeam = firstTeams.front();
+	  firstTeams.pop();
+	  secondTmpTeam = thirdTeams.front();
+	  thirdTeams.pop();
+	  if (i == 0)
+		m_rightSide.push_back(createMatch(firstTmpTeam, secondTmpTeam));
+	  if (i == 1)
+		m_leftSide.push_back(createMatch(firstTmpTeam, secondTmpTeam));
 
-		//C1-third-1 and F1-third-3
-		firstTmpTeam = firstTeams.front();
-		firstTeams.pop();
-		if (i == 0)
-		  m_leftSide.push_back(createMatch(firstTmpTeam, thirdTmpTeam));
-		if (i == 1)
-		  m_rightSide.push_back(createMatch(firstTmpTeam, thirdTmpTeam));
-	  }
+	  //C1-third-1 and F1-third-3
+	  firstTmpTeam = firstTeams.front();
+	  firstTeams.pop();
+	  if (i == 0)
+		m_leftSide.push_back(createMatch(firstTmpTeam, thirdTmpTeam));
+	  if (i == 1)
+		m_rightSide.push_back(createMatch(firstTmpTeam, thirdTmpTeam));
 	}
-	catch (const std::exception& ex)
-	{
-	  std::cout << "Error! " << ex.what() << std::endl;
-	}
+
   }
 }
 void Tournament::setWorldCupPlayOff()
@@ -281,11 +269,16 @@ void Tournament::printPlayOffGrid()
 
 std::shared_ptr<Team> Tournament::playRoundPlayOff()
 { 
-  for(int i = 0; i<2; ++i)
+  for(int round = 0; round<2; ++round)
   {
+	if (round == 1)
+	{
+	  std::cout << std::endl;
+	  std::cout << "\t----Quaterfinals----" << std::endl;
+	}
 	printPlayOffGrid();
-	playRoundPlayOffSide(m_leftSide, i);
-	playRoundPlayOffSide(m_rightSide, i);
+	playRoundPlayOffSide(m_leftSide, round);
+	playRoundPlayOffSide(m_rightSide, round);
   }
   std::cout<<std::endl;
   std::cout<<"\t----Semi-finals----"<<std::endl;
