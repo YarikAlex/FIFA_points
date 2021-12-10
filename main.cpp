@@ -1,5 +1,6 @@
 #include <iostream>
 #include <string>
+#include <memory>
 #include <vector>
 #include "Team.h"
 #include "Group.h"
@@ -13,8 +14,8 @@ int main()
   const string euroGroupPath = "../FIFApoints/EuroCupGroups.txt";
   const string worldCupPath = "../FIFApoints/WorldCupParticipants.txt";
   const string worldCupGroupPath = "../FIFApoints/WorldCupGroups.txt";
-  enum tournaments {EURO = 1, WORLD };
-
+  enum tournamentType { Euro = 1, World };
+ 
   int choice;
   do {
 	std::cout << "--------Select a tournament--------" << std::endl;
@@ -22,33 +23,32 @@ int main()
 	std::cin >> choice;
   } while (choice < 1 or choice > 2);
 
-  string pathParticipants, pathGroup;
-  if (choice == EURO)
+  std::unique_ptr<Tournament> tournament;
+  if (choice == Euro)
   {
-	pathParticipants = euroPath;
-	pathGroup = euroGroupPath;
+	Tournament euroCup;
+	tournament = euroCup.createEuroCup(euroPath, euroGroupPath);
   }
-  if (choice == WORLD)
+  if (choice == World)
   {
-	pathParticipants = worldCupPath;
-	pathGroup = worldCupGroupPath;
+	Tournament worldCup;
+	tournament = worldCup.createWorldCup(worldCupPath, worldCupGroupPath);
   }
-  Tournament tournament(choice, pathParticipants, pathGroup);
-  tournament.printParticipants();
-  tournament.printGroup();
-  tournament.playGroupRound();
-  if (choice == EURO)
+  tournament->printParticipants();
+  tournament->printGroup();
+  tournament->playGroupRound();
+  if (choice == Euro)
   {
-	tournament.setEuroPlayOff();
-	//TeamNamePrint winner(tournament.playRoundPlayOff());
-	cout<<"------" << tournament.playRoundPlayOff()->name << " is the Champion of Europe!!!------" << endl;
-	tournament.printParticipants();
+	
+	tournament->createEuroPlayOff();
+	cout<<"------" << tournament->playRoundPlayOff()->name << " is the Champion of Europe!!!------" << endl;
+	tournament->printParticipants();
   }
-  if (choice == WORLD)
+  if (choice == tournamentType::World)
   {
-	tournament.setWorldCupPlayOff();
-	cout << "------" << tournament.playRoundPlayOff()->name << " is the World Champion!!!------" << endl;
-	tournament.printParticipants();
+	tournament->createWorldCupPlayOff();
+	cout << "------" << tournament->playRoundPlayOff()->name << " is the World Champion!!!------" << endl;
+	tournament->printParticipants();
   }
 	
 

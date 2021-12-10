@@ -3,35 +3,34 @@
 #include <fstream>
 #include <algorithm>
 
-Tournament::Tournament(int choice, std::string& path, std::string& pathGroup)
+Tournament::Tournament(const TournamentConfig& config, const std::string& path, const std::string& pathGroup)
 {
-  const int EURO = 1;
-  const int WORLD = 2;
-  if (choice == EURO)
+  addParticipants(path, config.participantsNumber);
+  setGroup(pathGroup, config.groupNumber);
+}
+
+std::unique_ptr<Tournament> Tournament::createEuroCup(const std::string& path, const std::string& pathGroup)
+{
+  return create(m_euroConfig, path, pathGroup);
+}
+
+std::unique_ptr<Tournament> Tournament::createWorldCup(const std::string& path, const std::string& pathGroup)
+{
+  return create(m_worldConfig, path, pathGroup);
+}
+
+
+std::unique_ptr<Tournament> Tournament::create(const TournamentConfig& config, const std::string& path, const std::string& pathGroup)
+{
+  try
   {
-	try
-	{
-	  addParticipants(path, m_euroParticipants);
-	  setGroup(pathGroup, m_numberEuroGroup);
-	}
-	catch (const std::exception& ex)
-	{
-	  std::cout << "Error! "<< ex.what() << std::endl;
-	}
-	
+	return std::unique_ptr<Tournament>(new Tournament(config, path, pathGroup));
   }
-  if (choice == WORLD)
+  catch (const std::exception& ex)
   {
-	try
-	{
-	  addParticipants(path, m_worldCupParticipants);
-	  setGroup(pathGroup, m_numberWorldCupGroup);
-	}
-	catch (const std::exception& ex)
-	{
-	  std::cout << "Error!" << ex.what() << std::endl;
-	}
+	std::cout << "Error!" << ex.what() << std::endl;
   }
+  return nullptr;
 }
 
 void Tournament::addParticipants(const std::string& path, int numberParticipants) //The function reads participants from a file.
@@ -83,6 +82,7 @@ std::shared_ptr<Team> Tournament::addTeam(std::string& name)
 	  return it;
   }
 }
+
 void Tournament::playGroupRound()
 {
   int numberRounds = 3;
@@ -118,7 +118,7 @@ void Tournament::playGroupRound()
   }
   std::cout<<std::endl;
 }
-void Tournament::setEuroPlayOff()
+void Tournament::createEuroPlayOff()
 {
   //We split the first, second and third places into three baskets.
   std::queue<std::shared_ptr<Team>> firstTeams; //A1, B1, C1, D1, E1, F1
@@ -214,7 +214,7 @@ void Tournament::setEuroPlayOff()
 
   }
 }
-void Tournament::setWorldCupPlayOff()
+void Tournament::createWorldCupPlayOff()
 {
   std::queue<std::shared_ptr<Team>> firstTeams; //A1, B1, C1, D1, E1, F1, G1, H1
   std::queue<std::shared_ptr<Team>> secondTeams; //A2, B2, C2, D2, E2, F2, G2, H2
