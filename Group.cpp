@@ -1,7 +1,7 @@
 #include "Group.h"
 
 
-void Group::playMatch(std::shared_ptr<Team>& first, std::shared_ptr<Team>& second)
+void Group::playMatch(std::shared_ptr<Team>& first, std::shared_ptr<Team>& second, double importanceOfMatch)
 {
   int home, guest;
   std::cout << "\tToday's match: " << first->name << " - " << second->name << std::endl;

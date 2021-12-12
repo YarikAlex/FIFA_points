@@ -7,6 +7,7 @@ Tournament::Tournament(const TournamentConfig& config, const std::string& path, 
 {
   addParticipants(path, config.participantsNumber);
   setGroup(pathGroup, config.groupNumber);
+  m_configuration = config;
 }
 
 std::unique_ptr<Tournament> Tournament::createEuroCup(const std::string& path, const std::string& pathGroup)
@@ -94,22 +95,22 @@ void Tournament::playGroupRound()
 	  if (i == 0)
 	  {
 		std::cout << "----Round #1----" << std::endl;
-		it->playMatch(it->teams[0], it->teams[1]);
-		it->playMatch(it->teams[2], it->teams[3]);
+		it->playMatch(it->teams[0], it->teams[1], m_configuration.importanceOfMatchGroup);
+		it->playMatch(it->teams[2], it->teams[3], m_configuration.importanceOfMatchGroup);
 		std::cout << it<<std::endl;
 	  }
 	  if (i == 1)
 	  {
 		std::cout << "----Round #2----" << std::endl;
-		it->playMatch(it->teams[0], it->teams[2]);
-		it->playMatch(it->teams[1], it->teams[3]);
+		it->playMatch(it->teams[0], it->teams[2], m_configuration.importanceOfMatchGroup);
+		it->playMatch(it->teams[1], it->teams[3], m_configuration.importanceOfMatchGroup);
 		std::cout << it;
 	  }
 	  if (i == 2)
 	  {
 		std::cout << "----Round #3----" << std::endl;
-		it->playMatch(it->teams[0], it->teams[3]);
-		it->playMatch(it->teams[1], it->teams[2]);
+		it->playMatch(it->teams[0], it->teams[3], m_configuration.importanceOfMatchGroup);
+		it->playMatch(it->teams[1], it->teams[2], m_configuration.importanceOfMatchGroup);
 		it->sortGroup();
 		for_each(it->teams.begin(), it->teams.end(), [&](std::shared_ptr<Team>& team) {team->place = ++rank; });
 		std::cout << it;
@@ -255,6 +256,7 @@ void Tournament::printParticipants()
 void Tournament::printPlayOffGrid()
 {
   int count = 0;
+  std::cout << "\t------Round Play Off------" << std::endl;
   for (auto it : m_leftSide)
   {
 	std::cout << "Match #" << ++count << std::endl;
@@ -271,34 +273,36 @@ std::shared_ptr<Team> Tournament::playRoundPlayOff()
 { 
   for(int round = 0; round<2; ++round)
   {
+	double tmpImportance = m_configuration.importanceOfMatchGroup;
 	if (round == 1)
 	{
 	  std::cout << std::endl;
-	  std::cout << "\t----Quaterfinals----" << std::endl;
+	  std::cout << "\t------Quaterfinals------" << std::endl;
+	  tmpImportance = m_configuration.importanceOfMatchPlayOff;
 	}
 	printPlayOffGrid();
-	playRoundPlayOffSide(m_leftSide, round);
-	playRoundPlayOffSide(m_rightSide, round);
+	playRoundPlayOffSide(m_leftSide, round, tmpImportance);
+	playRoundPlayOffSide(m_rightSide, round, tmpImportance);
   }
   std::cout<<std::endl;
-  std::cout<<"\t----Semi-finals----"<<std::endl;
+  std::cout<<"\t------Semi-finals------"<<std::endl;
   printPlayOffGrid();
   std::shared_ptr<Team> firstFinalist, secondFinalist, winner;
-  firstFinalist = m_leftSide.front().playMatchPlayOff(m_leftSide.front().firstTeam, m_leftSide.front().secondTeam);
-  secondFinalist = m_rightSide.front().playMatchPlayOff(m_rightSide.front().firstTeam, m_rightSide.front().secondTeam);
+  firstFinalist = m_leftSide.front().playMatchPlayOff(m_leftSide.front().firstTeam, m_leftSide.front().secondTeam, m_configuration.importanceOfMatchPlayOff);
+  secondFinalist = m_rightSide.front().playMatchPlayOff(m_rightSide.front().firstTeam, m_rightSide.front().secondTeam, m_configuration.importanceOfMatchPlayOff);
   std::cout << std::endl;
-  std::cout << "\t----Final----" << std::endl;
+  std::cout << "\t------Final------" << std::endl;
   Match finalMatch = createMatch(firstFinalist, secondFinalist);
 
-  return winner = finalMatch.playMatchPlayOff(finalMatch.firstTeam, finalMatch.secondTeam);
+  return winner = finalMatch.playMatchPlayOff(finalMatch.firstTeam, finalMatch.secondTeam, m_configuration.importanceOfMatchPlayOff);
 }
 
-void Tournament::playRoundPlayOffSide(std::vector<Match>& gridSide, int round)
+void Tournament::playRoundPlayOffSide(std::vector<Match>& gridSide, int round, double importance)
 {
   std::queue<std::shared_ptr<Team>> winners;
   for (auto it : gridSide)
   {
-	winners.push(it.playMatchPlayOff(it.firstTeam, it.secondTeam));
+	winners.push(it.playMatchPlayOff(it.firstTeam, it.secondTeam, importance));
   }
   gridSide.clear();
   gridSide.shrink_to_fit();
