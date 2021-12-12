@@ -39,6 +39,26 @@ teamStats Team::evaluateStats(int scored, int conceded, double importanceOfMatch
   return team;
 }
 
+teamStats Team::evaluateStatsPlayOff(int scored, int conceded, double importanceOfMatch, double anotherTeamPoints)
+{
+  games++;
+  fifaBefore = fifaPoints;
+  teamStats team;
+  double ExpectedResultOfTheMatch = 1 / (pow(10, -(this->fifaPoints - anotherTeamPoints) / 600) + 1);
+  team.scored = goalsScored + scored;
+  team.conceded = goalsConceded + conceded;
+  team.difference = (goalsScored + scored) - (goalsConceded + conceded);
+  if (scored > conceded) {
+	team.pointsFifa = fifaPoints + importanceOfMatch * (0.75 - ExpectedResultOfTheMatch);
+  }
+  if (scored < conceded) {
+	points++;
+	team.pointsFifa = fifaPoints + importanceOfMatch * (0.5 - ExpectedResultOfTheMatch);
+  }
+  return team;
+  
+}
+
 std::ostream& operator<< (std::ostream& out, const std::shared_ptr<Team>& team)
 {
   out << std::setw(5) << team->place<<"\t" <<std::setw(10) << team->name << "\t" << team->games << "\t" << team->points
